@@ -8,6 +8,17 @@ function (jQuery) {
 		return (Date.UTC(d.getFullYear(), d.getMonth(), d.getDay(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds()));
 	}
 
+	function log(s) {
+		try {
+			if (typeof(s) == 'object' && (console && console.debug)) {
+				console.debug(s);
+			} else if (console && console.log) {
+				console.log(s);
+			}
+		} catch (e) {
+		}
+	}
+	
 	var eventlist = {
 		/**
 			Event following choosing the operator. When the operator is selected a set of input boxes should show up for entering values.
@@ -128,7 +139,7 @@ function (jQuery) {
 							*/
 //							jQuery.attachAutocompletes();
 						} catch (e) {
-							jQuery.log(e);
+							log(e);
 						}
 					/* INPUT BOX selection */
 					} else {
@@ -160,7 +171,7 @@ function (jQuery) {
 				values.find("input").each (function (i) {
 					$(this).keypress( function (e) {
 							if (e.which == 13) {
-								jQuery.log("Filter enter event trigger.")
+								log("Filter enter event trigger.")
 								jQuery(e.target).parent().parent().parent().next().find(".get").trigger("click");
 							}
 					});
@@ -251,25 +262,25 @@ function (jQuery) {
 			/* when no operator options actually exist */
 			/* alert("operator selectbox has " + operator.children().length + " options") */
 			if (operator.children().length == 2) {
-				jQuery.log("chooseOperand::Operator only has two children.");
+				log("chooseOperand::Operator only has two children.");
 				if (operator.prop("selectedIndex") == 0) {
 					operator.prop("selectedIndex", 1);
 				} else {
-					jQuery.log("chooseOperand::selectedIndex is not 0 (" + operator.prop("selectedIndex") + ")");
+					log("chooseOperand::selectedIndex is not 0 (" + operator.prop("selectedIndex") + ")");
 				}
 				operator.trigger("change");
-				jQuery.log("chooseOperand::Triggered change event for selectedIndex " + operator.prop("selectedIndex"));
+				log("chooseOperand::Triggered change event for selectedIndex " + operator.prop("selectedIndex"));
 				/* alert("operator=" + operator.find("option").length + ", values=" + values.length); */
 				operator.hide();
 			} else {
 				if (operator.prop("selectedIndex") == 0) {
 					operator.prop("selectedIndex", 1);
 				} else {
-					jQuery.log("chooseOperand::selectedIndex is not 0 (" + operator.prop("selectedIndex") + ")");
+					log("chooseOperand::selectedIndex is not 0 (" + operator.prop("selectedIndex") + ")");
 				}
 				operator.trigger("change");
 			}
-			jQuery.log("chooseOperand::completed selectedIndex section.");			
+			log("chooseOperand::completed selectedIndex section.");			
 			/* when no operator options actually exist */
 
 			if (operator.is(":focus") || operator.prev(".operand").is(":focus")) {
@@ -278,20 +289,20 @@ function (jQuery) {
 			}
 
 			values.show();
-			jQuery.log("chooseOperand::finished.");						
+			log("chooseOperand::finished.");						
 		},
 
 		/**
 			Event to remove a single filter.
 		*/
 		removeFilter: function (e) {
-			if (null != jQuery.log) jQuery.log("Entering removeFilter");
+			log("Entering removeFilter");
 			if (e != undefined) { /* TODO undefstand why this can be undefined. */
 				var target = jQuery(e.target);
 				target.unbind("click", eventlist.removeFilter);
 				target.parent().remove();
 			}
-			if (null != jQuery.log) jQuery.log("Exiting removeFilter");
+			log("Exiting removeFilter");
 			return false;
 		},
 		
@@ -299,25 +310,25 @@ function (jQuery) {
 			Event to remove a single filter.
 		*/
 		removeAllFilters: function (e) {
-			if (null != jQuery.log) jQuery.log("Entering removeAllFilters");
+			log("Entering removeAllFilters");
 			jQuery(e.target).parent().parent().find(".filter .remove[display!=none]").each(
 				function (i) {
 					jQuery(this).trigger("click");
 				}
 			);
-			if (null != jQuery.log) jQuery.log("Exiting removeAllFilters");
+			log("Exiting removeAllFilters");
 		},
 		addFilter: function (e) {
-			if (null != jQuery.log) jQuery.log("Entering addFilter");
+			log("Entering addFilter");
 			var panel = jQuery(e.target).parent().parent();
-			jQuery.log("jQuery.fn.attachFilterPanel.addFilter = " + e.data.operands.length);
+			log("jQuery.fn.attachFilterPanel.addFilter = " + e.data.operands.length);
 			retMe = panel.addFilter(e.data).bind("mouseenter mouseleave", function (e) { jQuery(e.target).toggleClass("filter-highlight") } );
-			if (null != jQuery.log) jQuery.log("Exiting addFilter");
+			log("Exiting addFilter");
 			return retMe;
 		},
 
 		getFilterAsJSON : function (e) {
-			if (null != jQuery.log) jQuery.log("Entering getFilterAsJSON");
+			log("Entering getFilterAsJSON");
 			var panel = jQuery(e.target).parent().parent();
 			var filters = panel.find(".filter");
 			var s = "{filter:[";
@@ -363,7 +374,7 @@ function (jQuery) {
 			);
 			s += "]}";
 			//alert(s);
-			if (null != jQuery.log) jQuery.log("Exiting getFilterAsJSON");
+			log("Exiting getFilterAsJSON");
 			return eval(s);
 		}
 
@@ -375,7 +386,7 @@ function (jQuery) {
 	*/
 	jQuery.fn.loadJSON = function (options) {
 		var myoptions = jQuery.extend({},jQuery.fn.loadJSON.defaults, options);
-		jQuery.log('Number of filters to process: ' + myoptions.filter.length);
+		log('Number of filters to process: ' + myoptions.filter.length);
 		/* alert(jQuery(this).attr("nodeName") + " " + jQuery(this).attr("className")) */ /* check on node's name and class. */
 		var addLink = jQuery(this).find("div.add");
 		if (myoptions.filter.length && myoptions.filter.length > 0) {
@@ -387,7 +398,7 @@ function (jQuery) {
 				var filter = jQuery(this).find("div.filter:last"); /* .addFilter(); is wrong, because it adds based on default values. */
 				
 				/* alert(jQuery(filter).attr("nodeName") + " " + jQuery(filter).attr("className")) */ /* check on node's name and class. */
-				jQuery.log("c="+filter+", operand="+operand+",operator="+operator+",values="+values);
+				log("c="+filter+", operand="+operand+",operator="+operator+",values="+values);
 				filter.find(".operand option").each( function (e) {
 					if (jQuery(this).attr("value") == operand) {
 						jQuery(this).attr("selected", "true");
@@ -522,11 +533,11 @@ function (jQuery) {
 		Function to allow adding a filter to a panel.
 	*/
 	jQuery.fn.addFilter = function (options) {
-		jQuery.log('Add Filter Function!');
+		log('Add Filter Function!');
 		var myoptions = jQuery.extend({},jQuery.fn.attachFilterPanel.defaults, options);
 
 		var includeRequired = (myoptions.initial.required != undefined && myoptions.initial.required == false) ? false : true;
-		jQuery.log("includeRequired = " + includeRequired);
+		log("includeRequired = " + includeRequired);
 		var filter = jQuery("<div class='filter IE6dots'></div>");
 		
 		operand = jQuery("<select class='operand' />");
@@ -540,12 +551,12 @@ function (jQuery) {
 				var operandOption = jQuery("<option>" + operandDisplay + "</option>");
 				operandOption.attr("value", myoptions.operands[k].name);
 				if (myoptions.operands[k].isDefault != undefined) {
-					jQuery.log("myoptions.operands["+k+"].isDefault=" + myoptions.operands[k].name +  ", " + myoptions.operands[k].isDefault)
+					log("myoptions.operands["+k+"].isDefault=" + myoptions.operands[k].name +  ", " + myoptions.operands[k].isDefault)
 					if (myoptions.operands[k].isDefault == true) {
-						jQuery.log(" bool");
+						log(" bool");
 					}
 					if (myoptions.operands[k].isDefault == 'true') {
-						jQuery.log(" str");
+						log(" str");
 					}
 				}
 				if (myoptions.operands[k].isDefault == true) {
@@ -555,9 +566,9 @@ function (jQuery) {
 				operand.append(operandOption);
 			}
 		}
-		jQuery.log("binding chooseOperand to change event.");
+		log("binding chooseOperand to change event.");
 		operand.bind("change", myoptions, eventlist.chooseOperand );
-		jQuery.log("binded chooseOperand to change event.");
+		log("binded chooseOperand to change event.");
 		operator = jQuery("<select class='operator' style='display:none' />");
 		values = jQuery("<span class='values'/>");
 		
@@ -584,7 +595,7 @@ function (jQuery) {
 	*/
 	jQuery.fn.addRequiredFilters = function (options) {
 		var myoptions = jQuery.extend({}, jQuery.fn.attachFilterPanel.defaults, options, {initial: {required:true} });
-		jQuery.log('Start addRequiredFilters');
+		log('Start addRequiredFilters');
 		s = "";
 		for (i = 0; i < myoptions.operands.length; i++) {
 			s += myoptions.operands[i].name + ","
@@ -606,17 +617,17 @@ function (jQuery) {
 				filter.find(".remove").remove();
 			}
 		}
-		jQuery.log('Close addRequiredFilters');
+		log('Close addRequiredFilters');
 	};
 	
 	/**
 	Attach the Filter panel within a DIV.
 	*/
 	jQuery.fn.attachFilterPanel = function(options) {
-		if (null != jQuery.log) jQuery.log("Entering jQuery.fn.attachFilterPanel");	
+		log("Entering jQuery.fn.attachFilterPanel");	
 		var myoptions = jQuery.extend({}, jQuery.fn.attachFilterPanel.defaults, options);
 
-		jQuery.log("jQuery.fn.attachFilterPanel = " + myoptions.operands.length);
+		log("jQuery.fn.attachFilterPanel = " + myoptions.operands.length);
 		
 		jQuery(this).html("");
 		jQuery(this).addClass("JQuery_FilterPanel");
@@ -654,7 +665,7 @@ function (jQuery) {
 				jQuery(this).find(".add").trigger("click");
 			}
 		} catch (e) {
-			jQuery.log("click trigger on add failed. " + e.message);
+			log("click trigger on add failed. " + e.message);
 			/* This bug appears in IE6, butit doesn't seem to cause any ill effects if caught. */
 		}
 		return jQuery(this);
