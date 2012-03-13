@@ -1,0 +1,137 @@
+<html>
+	<head>
+		<script src="jquery-1.7.1.min.js"></script>
+		<script src="jquery.filter.js"></script>
+		<link rel="stylesheet" href="jquery.filter.css" />
+		
+		<script>
+		
+		popupFunction = function (e) {
+			var json = e.data;
+			$("#"+json.id).attr("value", confirm("Hi There. url=http://google.com/q?return-id="+json.id));
+		},
+		submitFunction = function (e) {
+			var panel = jQuery(e.target).parent().parent()
+			var json = panel.getFilterAsJSON();
+		},
+
+		jQuery(document).ready(function() {
+
+			jQuery("#filter1").attachFilterPanel();
+			
+			jQuery("#filter2").attachFilterPanel({initial: {filters:2}});
+
+			jQuery("#filter3").attachFilterPanel();
+			var nSection =	"<span class='filter'>"+
+							"<span class='operand'>North</span>: <span class='hidden operator'>is</span><span class='values'><input class='value' />"+
+							"</span>";
+			var sSection =	"<span class='filter'>"+
+							"<span class='operand'>South</span>: <span class='hidden operator'>is</span><span class='values'><input class='value' />"+
+							"</span>";
+			jQuery("#filter3 .panel").prepend(sSection);
+			jQuery("#filter3 .panel").prepend(nSection);
+
+			jQuery("#filter4").attachFilterPanel(
+				{
+					operands:[
+						{name:'magnet', required:false, operators: [
+							{display:'sticks to', required:false, name:'sticksto', type:'select', values: ['magnet'] },
+							{display: 'is how old', name:'isAge', type:'calendar' },
+							{name:'is', type:'popup', popup: popupFunction, params : 2 }
+						]},
+						{name:'lobster', operators: [
+							{display:'sticks to', name:'sticksto', type:'select', values: ['magnet'] },
+							{display: 'is how old', required:false, name:'isAge', type:'calendar' },
+							{name:'is', type:'popup', popup: popupFunction, params : 2 }
+						]}
+					]
+				}
+			);
+
+			jQuery("#filter5").attachFilterPanel(
+				{
+					operands:[
+						{name:'North', required: true, operators: [
+							{display: 'is', required:true, name:'is', type:'latitude' }
+						]},
+						{name:'South', required: false, operators: [
+							{display: 'is', required:true, name:'is', type:'latitude' }
+						]},
+						{name:'East', required: true, operators: [
+							{display: 'is', required:true, name:'is', type:'longitude' }
+						]},
+						{name:'West', required: true, operators: [
+							{display: 'is', required:true, name:'is', type:'longitude' }
+						]},
+						{name:'taco', operators: [
+							{display:'sticks to', name:'sticksto', type:'select', values: ['magnet'] },
+							{display: 'is how old', required:true, name:'isAge', type:'calendar' },
+							{name:'is', type:'popup', popup: popupFunction, params : 2 }
+						]}
+					],
+					text: {
+						title:'Test of Fury',
+						add:'add',
+						clear:'clear',
+						get:'get',
+						remove:'remove',
+						selectdef:'sdf'
+					},
+					initial: {
+						filters:2,
+						required: false
+					},
+					onsubmit: submitFunction
+				}
+			);
+			
+		});
+		</script>
+		<style>
+		.hidden {display:none;}
+		</style>
+	</head>
+	<body>
+		Filter 1 uses only the default settings.
+		<div id="filter1" class="filter">
+		loading...
+		</div>
+
+	<div style="width:50%">
+		
+		Filter 2 starts with 2 blank filters.
+		<div id="filter2" class="filter">
+		loading...
+		</div>
+
+	</div>
+
+	<div style="width:75%">
+		Filter 3 has custom fields.
+		<div id="filter3" class="filter">
+		loading...
+		</div>
+
+	</div>
+
+	<div style="width:100%">
+		
+		Filter 4 has required fields.
+		<div id="filter4" class="filter">
+		loading...
+		</div>
+
+	</div>
+
+	<div style="width:100%">
+		
+		Filter 5 uses a mix of custom settings.
+		<div id="filter5" class="filter">
+		loading...
+		</div>
+
+	</div>
+
+	
+	</body>
+</html>
