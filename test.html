@@ -1,0 +1,43 @@
+<html>
+<head>
+<script>
+	/**
+		removes a parameter from a URL.
+	*/
+	function removeParam(qs, param) {
+		var qmarkParam = "?" + param + "=";
+		var amperParam = "&" + param + "=";
+		var qmarkIndex = qs.indexOf(qmarkParam);
+		var amperIndex = qs.indexOf(amperParam);
+		if (qmarkIndex != -1) {
+			var prestr = qs.substring(0, qmarkIndex + 1);
+			var poststr = qs.substring(prestr.length + qmarkParam.length);
+			if (-1 != poststr.indexOf("&")) {
+				poststr = poststr.substring(poststr.indexOf("&") + 1)
+			} else {
+				prestr = prestr.substring(0, prestr.length - 1);
+				poststr = "";
+			}
+		} else if (amperIndex != -1) {
+			var prestr = qs.substring(0, amperIndex + 1);
+			var poststr = qs.substring(prestr.length + amperParam.length);
+			if (-1 != poststr.indexOf("&")) {
+				poststr = poststr.substring(poststr.indexOf("&") + 1)
+			} else {
+				prestr = prestr.substring(0, prestr.length - 1);
+				poststr = "";
+			}
+		} else {
+			return qs;
+		}
+		return prestr + poststr;
+	}
+	
+var str = "http://lkajgsflkjagsfkjg?a=1&b=2&c=23";
+document.write("<br />remove a: " + removeParam(str, "a"));
+document.write("<br />remove b: " + removeParam(str, "b"));
+document.write("<br />remove c: " + removeParam(str, "c"));
+document.write("<br />remove DNE: " + removeParam(str, "DNE"));
+</script>
+</head>
+</html>
